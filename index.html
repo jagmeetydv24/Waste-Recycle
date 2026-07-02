@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waste to wealth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <button class="brand" data-nav="home" aria-label="Go to home">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M16 3 L28 9 V23 L16 29 L4 23 V9 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 15 L28 9 M16 15 L4 9 M16 15 V29" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand__text">Waste to wealth</span>
+    </button>
+    <nav class="tabs" aria-label="Primary">
+      <button class="tabs__item is-active" data-nav="home"><span class="tabs__num">01</span>Home</button>
+      <button class="tabs__item" data-nav="add"><span class="tabs__num">02</span>Add Waste</button>
+      <button class="tabs__item" data-nav="value"><span class="tabs__num">03</span>Your Value</button>
+      <button class="tabs__item" data-nav="directory"><span class="tabs__num">04</span>Sell It</button>
+    </nav>
+    <div class="topbar__badge" id="cart-badge" hidden><span id="cart-count">0</span> items</div>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- ============ PAGE 1: HOME ============ -->
+  <section class="page is-active" id="page-home" data-page="home">
+    <div class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow">Every kilo has a price</p>
+        <h1 class="hero__title">Your scrap isn't<br>trash. It's a <span class="hero__title--accent">receipt</span><br>waiting to happen.</h1>
+        <p class="hero__sub">Weigh your paper, plastic, metal, glass and e-waste, see what it's actually worth at today's scrap rates, then find a real dealer, recycler or NGO nearby to hand it to.</p>
+        <div class="hero__cta">
+          <button class="btn btn--primary" data-nav="add">Weigh your waste
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="btn btn--ghost" data-nav="directory">Find a dealer</button>
+        </div>
+      </div>
+
+      <div class="scale" role="img" aria-label="Digital scale display showing a live demo value">
+        <div class="scale__bezel">
+          <div class="scale__header">
+            <span class="scale__dot"></span> LIVE RATE DEMO
+          </div>
+          <div class="scale__readout">
+            <span class="scale__currency">₹</span><span id="demo-value">0.00</span>
+          </div>
+          <div class="scale__sub"><span id="demo-weight">0.0</span> kg · <span id="demo-material">Metal</span></div>
+        </div>
+        <div class="scale__foot"></div>
+      </div>
+    </div>
+
+    <section class="rates">
+      <div class="section-head">
+        <p class="eyebrow">Today's estimated rates</p>
+        <h2>Five materials, five prices</h2>
+      </div>
+      <div class="rates__grid" id="rates-grid"><!-- filled by JS --></div>
+      <p class="rates__note">Estimated averages for India, ₹ per kg. Actual rates vary by city, quality and dealer — always confirm before you sell.</p>
+    </section>
+
+    <section class="how">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Three stops, one receipt</h2>
+      </div>
+      <ol class="how__list">
+        <li class="how__item">
+          <span class="how__line" aria-hidden="true"></span>
+          <span class="how__label">Sort</span>
+          <h3>Add each type of waste</h3>
+          <p>Paper, plastic, metal, glass or e-waste — log the weight in kilograms for each pile you've collected.</p>
+        </li>
+        <li class="how__item">
+          <span class="how__line" aria-hidden="true"></span>
+          <span class="how__label">Sum</span>
+          <h3>See the total value</h3>
+          <p>WasteWorth adds it up like a scrap dealer's ledger — material by material, then a final total.</p>
+        </li>
+        <li class="how__item">
+          <span class="how__label">Sell</span>
+          <h3>Hand it to the right place</h3>
+          <p>Scrap dealers, recycling companies or NGOs — pick who takes what you're carrying.</p>
+        </li>
+      </ol>
+    </section>
+  </section>
+
+  <!-- ============ PAGE 2: ADD WASTE ============ -->
+  <section class="page" id="page-add" data-page="add">
+    <div class="section-head">
+      <p class="eyebrow">Step 02</p>
+      <h2>What are you getting rid of?</h2>
+      <p class="section-sub">Pick a material, enter the weight, add it to your ledger. Repeat for every kind of waste you have.</p>
+    </div>
+
+    <div class="add-layout">
+      <form class="ledger-card" id="add-form">
+        <p class="ledger-card__title">New entry</p>
+        <div class="chip-grid" id="material-chips" role="radiogroup" aria-label="Waste material"><!-- filled by JS --></div>
+
+        <label class="field" for="weight-input">
+          <span class="field__label">Weight (kg)</span>
+          <input type="number" id="weight-input" name="weight" min="0.1" step="0.1" placeholder="e.g. 2.5" inputmode="decimal" required>
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--block">
+          Add to ledger
+          <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <p class="field__error" id="form-error" hidden>Choose a material and enter a weight above 0.</p>
+      </form>
+
+      <div class="receipt-card">
+        <p class="ledger-card__title">Your ledger <span id="entry-count">(0)</span></p>
+        <div class="receipt__list" id="entry-list">
+          <p class="receipt__empty" id="entry-empty">Nothing added yet — your entries will line up here like a receipt.</p>
+        </div>
+        <div class="receipt__foot">
+          <button class="btn btn--dark btn--block" id="go-value" disabled>
+            See what it's worth
+            <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 3: VALUE ============ -->
+  <section class="page" id="page-value" data-page="value">
+    <div class="section-head">
+      <p class="eyebrow">Step 03</p>
+      <h2>Here's what your waste is worth</h2>
+      <p class="section-sub">A live readout of your total, plus the full breakdown — just like a dealer's weighing slip.</p>
+    </div>
+
+    <div class="value-layout">
+      <div class="scale scale--big" role="img" aria-label="Total value display">
+        <div class="scale__bezel">
+          <div class="scale__header"><span class="scale__dot"></span> TOTAL PAYOUT</div>
+          <div class="scale__readout scale__readout--big">
+            <span class="scale__currency">₹</span><span id="total-value">0.00</span>
+          </div>
+          <div class="scale__sub"><span id="total-weight">0.0</span> kg total across <span id="total-items">0</span> items</div>
+        </div>
+        <div class="scale__foot"></div>
+      </div>
+
+      <div class="breakdown-card">
+        <p class="ledger-card__title">Breakdown</p>
+        <table class="breakdown-table" id="breakdown-table">
+          <thead>
+            <tr><th>Material</th><th>Weight</th><th>Rate</th><th>Subtotal</th></tr>
+          </thead>
+          <tbody id="breakdown-body"><!-- filled by JS --></tbody>
+        </table>
+        <p class="breakdown__empty" id="breakdown-empty">Add some waste first — head back to Add Waste.</p>
+      </div>
+    </div>
+
+    <div class="hero__cta value__cta">
+      <button class="btn btn--ghost" data-nav="add">Add more waste</button>
+      <button class="btn btn--primary" data-nav="directory">Find where to sell
+        <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ PAGE 4: DIRECTORY ============ -->
+  <section class="page" id="page-directory" data-page="directory">
+    <div class="section-head">
+      <p class="eyebrow">Step 04</p>
+      <h2>Where to hand it over</h2>
+      <p class="section-sub">Three kinds of takers, depending on what you value more — the best price, guaranteed recycling, or giving it to a cause.</p>
+    </div>
+
+    <div class="directory-tabs" role="tablist" aria-label="Directory categories">
+      <button class="dtab is-active" data-cat="dealers" role="tab" aria-selected="true">Scrap Dealers</button>
+      <button class="dtab" data-cat="recyclers" role="tab" aria-selected="false">Recycling Companies</button>
+      <button class="dtab" data-cat="ngos" role="tab" aria-selected="false">NGOs</button>
+    </div>
+
+    <div class="directory-grid" id="directory-grid"><!-- filled by JS --></div>
+  </section>
+
+  <!-- ============ PAGE 5: SCHEDULE ============ -->
+  <section class="page" id="page-schedule" data-page="schedule">
+    <button class="back-link" id="schedule-back" type="button">
+      <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M12.5 4 6 10l6.5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to directory
+    </button>
+
+    <div class="section-head">
+      <p class="eyebrow">Step 05</p>
+      <h2 id="schedule-title">Schedule a pickup or drop-off</h2>
+      <p class="section-sub" id="schedule-sub">Fill in your details and we'll line up a time with them.</p>
+    </div>
+
+    <div class="add-layout">
+      <form class="ledger-card" id="schedule-form">
+        <p class="ledger-card__title">Booking details</p>
+
+        <div class="field field--org">
+          <span class="field__label">Taking your waste</span>
+          <div class="org-summary" id="schedule-org">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <div class="mode-toggle" id="schedule-mode" role="radiogroup" aria-label="Pickup or drop-off">
+          <button type="button" class="mode-btn is-selected" data-mode="pickup">Home pickup</button>
+          <button type="button" class="mode-btn" data-mode="dropoff">Self drop-off</button>
+        </div>
+
+        <label class="field" for="sch-name">
+          <span class="field__label">Your name</span>
+          <input type="text" id="sch-name" name="name" placeholder="e.g. Priya Sharma" required>
+        </label>
+
+        <label class="field" for="sch-phone">
+          <span class="field__label">Phone number</span>
+          <input type="tel" id="sch-phone" name="phone" placeholder="e.g. 98765 43210" required>
+        </label>
+
+        <label class="field" for="sch-address">
+          <span class="field__label" id="sch-address-label">Pickup address</span>
+          <input type="text" id="sch-address" name="address" placeholder="House no., street, area" required>
+        </label>
+
+        <div class="field-row">
+          <label class="field" for="sch-date">
+            <span class="field__label">Date</span>
+            <input type="date" id="sch-date" name="date" required>
+          </label>
+          <label class="field" for="sch-time">
+            <span class="field__label">Preferred time</span>
+            <input type="time" id="sch-time" name="time" required>
+          </label>
+        </div>
+
+        <label class="field" for="sch-notes">
+          <span class="field__label">Notes (optional)</span>
+          <input type="text" id="sch-notes" name="notes" placeholder="Approx. weight, material details, etc.">
+        </label>
+
+        <button type="submit" class="btn btn--primary btn--block">
+          Confirm booking
+          <svg viewBox="0 0 20 20" fill="none" width="16" height="16"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <div class="receipt-card" id="schedule-confirm-card" hidden>
+        <p class="ledger-card__title">Booking confirmed</p>
+        <div class="confirm-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" width="40" height="40"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="confirm-text" id="schedule-confirm-text"></p>
+        <button class="btn btn--ghost btn--block" data-nav="directory">Back to directory</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <p>WasteWorth — a pocket ledger for what your waste is worth. Rates are indicative estimates, not live market prices.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
